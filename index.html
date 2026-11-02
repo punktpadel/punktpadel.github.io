@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>punkt. – Pilotclub werden</title>
+<meta name="description" content="punkt. – das smarte Scoreboard für Padel-Courts. Wir suchen Pilotclubs.">
+<style>
+@font-face{font-family:"Departure Mono";src:url(departure-mono.woff2) format("woff2")}
+:root{--paper:#ebe7df;--ink:#141413;--soft:#3b3a37;--mute:#7a766e;--rule:#cbc5b9;--lime:#b9d23a;--lime-ink:#7f9a12}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font:400 17px/1.5 "Departure Mono",ui-monospace,Menlo,monospace;min-height:100vh;display:flex;justify-content:center}
+main{width:100%;max-width:520px;padding:28px 22px 40px}
+.top{display:flex;justify-content:space-between;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--rule);padding-bottom:12px}
+.top b{font-weight:400;color:var(--lime-ink)}
+svg{display:block;width:100%;height:auto;margin:44px 0 26px}
+p.lead{font-size:17px;color:var(--soft);margin-bottom:30px}
+a.btn{display:block;text-align:center;background:var(--ink);color:var(--paper);text-decoration:none;font-size:18px;letter-spacing:.04em;text-transform:uppercase;padding:20px 16px;border-radius:4px}
+a.btn span{color:var(--lime)}
+.alt{margin-top:18px;font-size:14px;color:var(--mute);text-align:center}
+.alt a{color:var(--ink)}
+ul{list-style:none;margin-top:40px;border-top:1px solid var(--ink)}
+li{padding:14px 0;border-bottom:1px solid var(--rule);font-size:15px;display:flex;gap:12px}
+li i{font-style:normal;color:var(--lime-ink)}
+footer{margin-top:40px;font-size:12px;color:var(--mute);letter-spacing:.03em;text-transform:uppercase}
+</style></head><body><main>
+<div class="top"><span>punkt<b>.</b></span><span>pilotphase 2026</span></div>
+<svg id="h" viewBox="0 0 470 170" aria-label="Pilotclub werden"></svg>
+<p class="lead">Das smarte Scoreboard für Padel-Courts. Wir suchen Clubs, die punkt. einige Wochen auf einem Court testen.</p>
+<a class="btn" href="mailto:team@punktpadel.com?subject=Interesse%20an%20punkt.%20%E2%80%93%20Pilotclub&amp;body=Hallo%20punkt.-Team%2C%0A%0Awir%20sind%20interessiert%20und%20h%C3%A4tten%20gern%20mehr%20Infos%20zu%20punkt.%0A%0AClub%3A%0AOrt%3A%0AAnzahl%20Courts%20%28indoor/outdoor%29%3A%0AAnsprechpartner%3A%0ATelefon%20%28optional%29%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%0A">E-Mail schreiben <span>→</span></a>
+<p class="alt">oder direkt an <a href="mailto:team@punktpadel.com">team@punktpadel.com</a></p>
+<ul>
+<li><i>●</i>Ein Court kostenlos ausgestattet</li>
+<li><i>●</i>Raum für Wünsche und Anregungen</li>
+<li><i>●</i>Vorzugskonditionen für später</li>
+</ul>
+<footer>punkt. · smartes scoreboard für padel-courts</footer>
+</main>
+<script>
+// Überschrift in der LED-Punktschrift der Tafel
+var F={P:"11110100011000111110100001000010000",I:"01110001000010000100001000010001110",L:"10000100001000010000100001000011111",O:"01110100011000110001100011000101110",T:"11111001000010000100001000010000100",
+C:"01110100011000010000100001000101110",U:"10001100011000110001100011000101110",B:"11110100011000111110100011000111110",W:"10001100011000110101101011010101010",E:"11111100001000011110100001000011111",
+R:"11110100011000111110101001001010001",D:"11110100011000110001100011000111110",N:"10001100011100110101100111000110001"};
+function line(t,y,p){var o="",x=4;for(var i=0;i<t.length;i++){var c=t[i];if(c===" "){x+=p*3;continue}var g=F[c];
+  for(var r=0;r<7;r++)for(var k=0;k<5;k++)if(g[r*5+k]==="1")o+='<circle cx="'+(x+k*p)+'" cy="'+(y+r*p)+'" r="'+(p*.4)+'" fill="#141413"/>';x+=p*6}return [o,x]}
+var a=line("PILOTCLUB",8,8.2),b=line("WERDEN",96,8.2);
+document.getElementById("h").innerHTML=a[0]+b[0]+'<circle cx="'+(b[1]+2)+'" cy="'+(96+6*8.2)+'" r="'+(8.2*.4)+'" fill="#7f9a12"/>';
+</script>
+</body></html>
