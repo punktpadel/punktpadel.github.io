@@ -9,8 +9,11 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--paper);color:var(--ink);font:400 17px/1.5 "Departure Mono",ui-monospace,Menlo,monospace;min-height:100vh;display:flex;justify-content:center}
 main{width:100%;max-width:520px;padding:28px 22px 40px}
-.top{display:flex;justify-content:space-between;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--rule);padding-bottom:12px}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--mute);border-bottom:1px solid var(--rule);padding-bottom:12px}
 .top b{font-weight:400;color:var(--lime-ink)}
+.lang{display:flex;gap:4px}
+.lang button{appearance:none;border:1px solid transparent;background:none;font:inherit;letter-spacing:.06em;color:var(--mute);padding:4px 8px;border-radius:3px;cursor:pointer}
+.lang button[aria-pressed="true"]{color:var(--ink);border-color:var(--ink)}
 svg{display:block;width:100%;height:auto;margin:44px 0 26px}
 p.lead{font-size:17px;color:var(--soft);margin-bottom:30px}
 a.btn{display:block;text-align:center;background:var(--ink);color:var(--paper);text-decoration:none;font-size:18px;letter-spacing:.04em;text-transform:uppercase;padding:20px 16px;border-radius:4px}
@@ -22,26 +25,71 @@ li{padding:14px 0;border-bottom:1px solid var(--rule);font-size:15px;display:fle
 li i{font-style:normal;color:var(--lime-ink)}
 footer{margin-top:40px;font-size:12px;color:var(--mute);letter-spacing:.03em;text-transform:uppercase}
 </style></head><body><main>
-<div class="top"><span>punkt<b>.</b></span><span>pilotphase 2026</span></div>
-<svg id="h" viewBox="0 0 470 170" aria-label="Pilotclub werden"></svg>
-<p class="lead">Das smarte Scoreboard für Padel-Courts. Wir suchen Clubs, die punkt. einige Wochen auf einem Court testen.</p>
-<a class="btn" href="mailto:team@punktpadel.com?subject=Interesse%20an%20punkt.%20%E2%80%93%20Pilotclub&amp;body=Hallo%20punkt.-Team%2C%0A%0Awir%20sind%20interessiert%20und%20h%C3%A4tten%20gern%20mehr%20Infos%20zu%20punkt.%0A%0AClub%3A%0AOrt%3A%0AAnzahl%20Courts%20%28indoor/outdoor%29%3A%0AAnsprechpartner%3A%0ATelefon%20%28optional%29%3A%0A%0AViele%20Gr%C3%BC%C3%9Fe%0A">E-Mail schreiben <span>→</span></a>
-<p class="alt">oder direkt an <a href="mailto:team@punktpadel.com">team@punktpadel.com</a></p>
-<ul>
-<li><i>●</i>Ein Court kostenlos ausgestattet</li>
-<li><i>●</i>Raum für Wünsche und Anregungen</li>
-<li><i>●</i>Vorzugskonditionen für später</li>
-</ul>
-<footer>punkt. · smartes scoreboard für padel-courts</footer>
+<div class="top"><span>punkt<b>.</b></span>
+  <div class="lang" role="group" aria-label="Sprache / Language / Idioma">
+    <button data-l="de" aria-pressed="true">DE</button><button data-l="en" aria-pressed="false">EN</button><button data-l="es" aria-pressed="false">ES</button>
+  </div></div>
+<svg id="h" viewBox="0 0 470 170"></svg>
+<p class="lead" id="lead"></p>
+<a class="btn" id="btn" href="mailto:team@punktpadel.com"></a>
+<p class="alt"><span id="alt"></span> <a href="mailto:team@punktpadel.com">team@punktpadel.com</a></p>
+<ul id="list"></ul>
+<footer id="foot"></footer>
 </main>
 <script>
+// Texte und vorbereitete Mails je Sprache
+var T={
+de:{title:"punkt. – Pilotclub werden",head:["PILOTCLUB","WERDEN."],
+  lead:"Das smarte Scoreboard für Padel-Courts. Wir suchen Clubs, die punkt. einige Wochen auf einem Court testen.",
+  btn:"E-Mail schreiben",alt:"oder direkt an",
+  list:["Ein Court kostenlos ausgestattet","Raum für Wünsche und Anregungen","Vorzugskonditionen für später"],
+  foot:"punkt. · smartes Scoreboard für Padel-Courts · Pilotphase 2026",
+  subject:"Interesse an punkt. – Pilotclub",
+  body:"Hallo punkt.-Team,\n\nwir sind interessiert und hätten gern mehr Infos zu punkt.\n\nClub:\nOrt:\nAnzahl Courts (indoor/outdoor):\nAnsprechpartner:\nTelefon (optional):\n\nViele Grüße\n"},
+en:{title:"punkt. – Become a pilot club",head:["BECOME A","PILOT CLUB."],
+  lead:"The smart scoreboard for padel courts. We are looking for clubs to test punkt. on one court for a few weeks.",
+  btn:"Write an email",alt:"or directly to",
+  list:["One court equipped free of charge","Room for your ideas and wishes","Preferential terms later on"],
+  foot:"punkt. · smart scoreboard for padel courts · pilot phase 2026",
+  subject:"Interest in punkt. – pilot club",
+  body:"Hi punkt. team,\n\nwe are interested and would like more information about punkt.\n\nClub:\nCity:\nNumber of courts (indoor/outdoor):\nContact person:\nPhone (optional):\n\nBest regards\n"},
+es:{title:"punkt. – Hazte club piloto",head:["HAZTE CLUB","PILOTO."],
+  lead:"El marcador inteligente para pistas de pádel. Buscamos clubes que prueben punkt. en una pista durante unas semanas.",
+  btn:"Escribir un email",alt:"o directamente a",
+  list:["Una pista equipada gratis","Espacio para vuestras ideas y deseos","Condiciones preferentes más adelante"],
+  foot:"punkt. · marcador inteligente para pistas de pádel · fase piloto 2026",
+  subject:"Interés en punkt. – club piloto",
+  body:"Hola equipo de punkt.,\n\nnos interesa y nos gustaría recibir más información sobre punkt.\n\nClub:\nCiudad:\nNúmero de pistas (indoor/outdoor):\nPersona de contacto:\nTeléfono (opcional):\n\nSaludos\n"}};
+
 // Überschrift in der LED-Punktschrift der Tafel
-var F={P:"11110100011000111110100001000010000",I:"01110001000010000100001000010001110",L:"10000100001000010000100001000011111",O:"01110100011000110001100011000101110",T:"11111001000010000100001000010000100",
-C:"01110100011000010000100001000101110",U:"10001100011000110001100011000101110",B:"11110100011000111110100011000111110",W:"10001100011000110101101011010101010",E:"11111100001000011110100001000011111",
-R:"11110100011000111110101001001010001",D:"11110100011000110001100011000111110",N:"10001100011100110101100111000110001"};
-function line(t,y,p){var o="",x=4;for(var i=0;i<t.length;i++){var c=t[i];if(c===" "){x+=p*3;continue}var g=F[c];
-  for(var r=0;r<7;r++)for(var k=0;k<5;k++)if(g[r*5+k]==="1")o+='<circle cx="'+(x+k*p)+'" cy="'+(y+r*p)+'" r="'+(p*.4)+'" fill="#141413"/>';x+=p*6}return [o,x]}
-var a=line("PILOTCLUB",8,8.2),b=line("WERDEN",96,8.2);
-document.getElementById("h").innerHTML=a[0]+b[0]+'<circle cx="'+(b[1]+2)+'" cy="'+(96+6*8.2)+'" r="'+(8.2*.4)+'" fill="#7f9a12"/>';
+var F={A:"01110100011000111111100011000110001",B:"11110100011000111110100011000111110",C:"01110100011000010000100001000101110",D:"11110100011000110001100011000111110",
+E:"11111100001000011110100001000011111",H:"10001100011000111111100011000110001",I:"01110001000010000100001000010001110",L:"10000100001000010000100001000011111",
+M:"10001110111010110101100011000110001",N:"10001100011100110101100111000110001",O:"01110100011000110001100011000101110",P:"11110100011000111110100001000010000",
+R:"11110100011000111110101001001010001",T:"11111001000010000100001000010000100",U:"10001100011000110001100011000101110",W:"10001100011000110101101011010101010",
+Z:"11111000010001000100010001000011111"};
+function dots(t,y,p){var o="",x=4;for(var i=0;i<t.length;i++){var c=t[i];
+  if(c===" "){x+=p*3;continue}
+  if(c==="."){o+='<circle cx="'+(x+1)+'" cy="'+(y+6*p)+'" r="'+(p*.4)+'" fill="#7f9a12"/>';x+=p*2;continue}
+  var g=F[c];for(var r=0;r<7;r++)for(var k=0;k<5;k++)if(g[r*5+k]==="1")o+='<circle cx="'+(x+k*p)+'" cy="'+(y+r*p)+'" r="'+(p*.4)+'" fill="#141413"/>';x+=p*6}return o}
+
+function setLang(l){var d=T[l];document.documentElement.lang=l;document.title=d.title;
+  var cols=function(t){var c=0;for(var i=0;i<t.length;i++)c+=t[i]===" "?3:t[i]==="."?2:6;return c},p=Math.min(8.2,458/Math.max(cols(d.head[0]),cols(d.head[1])));
+  document.getElementById("h").innerHTML=dots(d.head[0],8,p)+dots(d.head[1],8+p*10.7,p);
+  document.getElementById("h").setAttribute("aria-label",d.head.join(" "));
+  document.getElementById("lead").textContent=d.lead;
+  var b=document.getElementById("btn");b.innerHTML=d.btn+' <span>→</span>';
+  b.href="mailto:team@punktpadel.com?subject="+encodeURIComponent(d.subject)+"&body="+encodeURIComponent(d.body);
+  document.getElementById("alt").textContent=d.alt;
+  document.getElementById("list").innerHTML=d.list.map(function(s){return "<li><i>●</i>"+s+"</li>"}).join("");
+  document.getElementById("foot").textContent=d.foot;
+  document.querySelectorAll(".lang button").forEach(function(x){x.setAttribute("aria-pressed",x.dataset.l===l?"true":"false")});
+  try{localStorage.setItem("punkt-lang",l)}catch(e){}}
+
+document.querySelectorAll(".lang button").forEach(function(x){x.addEventListener("click",function(){setLang(x.dataset.l)})});
+var start="de";
+try{start=localStorage.getItem("punkt-lang")||""}catch(e){start=""}
+if(!T[start]){var nl=(navigator.language||"de").slice(0,2).toLowerCase();start=T[nl]?nl:"en";if(nl==="de")start="de"}
+var q=(location.search.match(/[?&]lang=(de|en|es)/)||[])[1];if(q)start=q;
+setLang(start);
 </script>
 </body></html>
